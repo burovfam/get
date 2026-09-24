@@ -11,9 +11,9 @@ class PWM_DAC:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.gpio_pin, GPIO.OUT, initial=0)
 
-        # Создаём объект ШИМ
+        
         self.pwm = GPIO.PWM(self.gpio_pin, self.pwm_frequency)
-        self.pwm.start(0)  # старт с 0% заполнения
+        self.pwm.start(0)  
 
     def deinit(self):
         self.pwm.stop()
@@ -28,7 +28,7 @@ class PWM_DAC:
             self.pwm.ChangeDutyCycle(0)
             return
 
-        # Формула: duty = voltage / dynamic_range * 100 (в процентах)
+        
         duty = voltage / self.dynamic_range * 100
         self.pwm.ChangeDutyCycle(duty)
 

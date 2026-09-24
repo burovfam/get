@@ -9,11 +9,11 @@ for led in leds:
 def fecimal2binary(value):
     return GPIO.output(leds, [int(bit) for bit in bin(value)[2:].zfill(8)])
 
-num = 3.3
+num = 3.184
 
 def voltage_to_number(voltage):
     if not(0.0 <= voltage <= num):
-        print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {num:.2f} В")
+        print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {num:.2f} В)")
         return 0
     return int(voltage / num * 255)
 
