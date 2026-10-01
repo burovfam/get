@@ -18,13 +18,13 @@ class MCP4725:
         if not isinstance(number, int):
             print("На вход ЦАП можно подавать только целые числа")
         if not (0 <= number <= 4095):
-            print("ЧИсло выходит за разрядность MCP4752 (12 бит)")
+            print("Число выходит за разрядность MCP4752 (12 бит)")
         first_byte = self.wm | self.pds | number >> 8
         second_byte = number & 0xFF
-        self.bus.write_byte_data(0x61, first_bytw, second_byte)
+        self.bus.write_byte_data(self.address, first_byte, second_byte)
 
         if self.verbose:
-            print(f"Число: {number}, отправленные по I2C данные: [0x{(self,adress << 1): 02X}, 0x{first_byte:02X}, 0x{second_byte:02X}]\n") 
+            print(f"Число: {number}, отправленные по I2C данные: [0x{(self.address << 1): 02X}, 0x{first_byte:02X}, 0x{second_byte:02X}]\n") 
         
     def set_voltage(self, voltage):
         if not (0.0 <= voltage <= self.dynamic_range):
@@ -35,19 +35,19 @@ class MCP4725:
         number = int(voltage / self.dynamic_range * 4095)
         self.set_number(number)
     
-    if __name__ == "__main__":
-        dac= None
-        try:
-            dac = MCP4725(5.0, 0x61, True)
+if __name__ == "__main__":
+    dac= None
+    try:
+        dac = MCP4725(5.0, 0x61, True)
 
-            while True:
-                try:
-                    voltage = float(input("Введите напряжение в Вольтах: "))
-                    dac.set_voltage(voltage)
+        while True:
+            try:
+                voltage = float(input("Введите напряжение в Вольтах: "))
+                dac.set_voltage(voltage)
 
-                except ValueError:
-                    print("Вы ввели не число. Попробуйте еще раз\n")
+            except ValueError:
+                print("Вы ввели не число. Попробуйте еще раз\n")
 
-        finally: 
-            if dac is not None:
-                dac.deinit()
+    finally: 
+        if dac is not None:
+            dac.deinit()
