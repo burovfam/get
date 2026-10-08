@@ -1,5 +1,5 @@
 import r2r_dac as r2r
-import translate_generator as tg
+import triangle_generator as tg
 import time
 
 
