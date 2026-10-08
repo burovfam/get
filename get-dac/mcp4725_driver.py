@@ -46,17 +46,17 @@ class MCP4725:
                                                                                                                             
 if __name__ == "__main__":
     dac = None
-try:
-    dac = MCP4725(5.0, 0x61, True)
+    try:
+        dac = MCP4725(5.0, 0x61, True)
 
-    while True:
-        try:
-            voltage = float(input("Введите напряжение в Вольтах: "))
-            dac.set_voltage(voltage)
+        while True:
+            try:
+                voltage = float(input("Введите напряжение в Вольтах: "))
+                dac.set_voltage(voltage)
 
-        except ValueError:
-            print("Вы ввели не число. Попробуйте ещё раз\n")
+            except ValueError:
+                print("Вы ввели не число. Попробуйте ещё раз\n")
 
-finally:
-    if dac is not None:
-        dac.deinit()
+    finally:
+        if dac is not None:
+            dac.deinit()
