@@ -1,7 +1,7 @@
 import r2r_dac as r2r
 import translate_generator as tg
 import time
-amplitude = 1.8
+amplitude = 3.0
 signal_frequency = 10
 sampling_frequency = 1000
 
