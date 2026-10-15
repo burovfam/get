@@ -6,8 +6,7 @@ class R2R_ADC:
         self.dynamic_range = dynamic_range
         self.verbose = verbose
         self.compare_time = compare_time
-
-        self.bits_gpio = [26, 30, 29, 16, 13, 12, 25, 11]
+        self.bits_gpio = [26, 30, 19, 16, 13, 12, 25, 11]
         self.comp_gpio = 21
 
         GPIO.setmode(GPIO.BCM)
@@ -41,7 +40,7 @@ if __name__ == "__main__":
         adc = R2R_ADC(3.183, 0.01, True)
         while True:
             voltage = adc.get_sc_voltage()
-            print(f"Напряжеие: {voltage:3f} B")
+            print(f"Напряжеие: {voltage:.3f} B")
     finally:
         if adc is not None:
             adc.deinit()
