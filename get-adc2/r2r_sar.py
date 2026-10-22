@@ -1,5 +1,4 @@
 import time
-
 import adc_plot
 from r2r_adc import R2R_ADC
 
