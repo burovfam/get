@@ -36,7 +36,7 @@ class R2R_ADC:
             time.sleep(self.compare_time)
 
             # Компаратор выдаёт 0, когда напряжение ЦАП превысило входное
-            if GPIO.input(self.comp_gpio) == 0:
+            if not GPIO.input(self.comp_gpio) == 0:
                 if self.verbose:
                     print(f"Компаратор сработал на числе {number}")
                 return number
