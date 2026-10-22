@@ -17,7 +17,7 @@ try:
         voltage_values.append(voltage)
         time_values.append(time.time() - start_time)
 
-    # Строим только гистограмму
+    
     adc_plot_hist.plot_sampling_period_hist(time_values)
 
 finally:

@@ -36,7 +36,7 @@ class R2R_ADC:
             time.sleep(self.compare_time)
 
             # Компаратор выдаёт 0, когда напряжение ЦАП превысило входное
-            if GPIO.input(self.comp_gpio) == 0:
+            if GPIO.input(self.comp_gpio) == 1:
                 if self.verbose:
                     print(f"Компаратор сработал на числе {number}")
                 return number
@@ -57,8 +57,8 @@ class R2R_ADC:
 
 if __name__ == "__main__":
     try:
-        # Замените на динамический диапазон вашего ЦАП, измеренный мультиметром
-        adc = R2R_ADC(3.16)
+        
+        adc = R2R_ADC(3.183)
 
         while True:
             voltage = adc.get_sc_voltage()

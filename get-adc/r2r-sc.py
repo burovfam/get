@@ -4,7 +4,7 @@ import adc_plot
 from r2r_adc import R2R_ADC
 
 
-dynamic_range = 3.16
+dynamic_range = 3.183
 
 adc = R2R_ADC(dynamic_range, compare_time=0.0001)
 
