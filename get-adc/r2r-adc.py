@@ -19,30 +19,50 @@ class R2R_ADC:
         GPIO.output(self.bits_gpio, 0)
         GPIO.cleanup()
 
+    def __del__(self):
+        # «Деструктор»: выставляет 0 на выход ЦАП и очищает настройки GPIO
+        self.deinit()
+
     def number_to_dac(self, number):
-        binary = [int(b) for b in bin(number)[2:].zfill(8)]
-        GPIO.output(self.bits_gpio, binary)
+        # Старший разряд первым, как в списке bits_gpio
+        bits = [int(bit) for bit in bin(number)[2:].zfill(len(self.bits_gpio))]
+        GPIO.output(self.bits_gpio, bits)
 
     def sequential_counting_adc(self):
-        for num in range(256):
-            self.number_to_dac(num)
+        max_number = 2 ** len(self.bits_gpio) - 1
+
+        for number in range(max_number + 1):
+            self.number_to_dac(number)
             time.sleep(self.compare_time)
-            if GPIO.input(self.comp_gpio):
-                return num
-        return 255
+
+            # Компаратор выдаёт 0, когда напряжение ЦАП превысило входное
+            if GPIO.input(self.comp_gpio) == 0:
+                if self.verbose:
+                    print(f"Компаратор сработал на числе {number}")
+                return number
+
+        # Напряжение ЦАП так и не превысило входное
+        return max_number
 
     def get_sc_voltage(self):
         number = self.sequential_counting_adc()
-        return number * self.dynamic_range / 255
+        max_number = 2 ** len(self.bits_gpio) - 1
+        voltage = number / max_number * self.dynamic_range
+
+        if self.verbose:
+            print(f"Число на ЦАП: {number}, напряжение: {voltage:.3f} В")
+
+        return voltage
 
 
 if __name__ == "__main__":
-    adc = None
     try:
-        adc = R2R_ADC(3.183, 0.01, True)
+        # Замените на динамический диапазон вашего ЦАП, измеренный мультиметром
+        adc = R2R_ADC(3.16)
+
         while True:
             voltage = adc.get_sc_voltage()
-            print(f"Напряжение: {voltage:.3f} В")
+            print(f"Измеренное напряжение: {voltage:.3f} В")
+
     finally:
-        if adc is not None:
-            adc.deinit()
+        adc.deinit()
