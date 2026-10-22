@@ -19,7 +19,7 @@ try:
         time.sleep(0.1)
         state = GPIO.input(comp)
         print(f"ЦАП = {num}, компаратор = {state}")
-        print(f"Напряжение на ЦАП ≈ {num * 3.183 / 255:.3f} В")
+        print(f"Напряжение на ЦАП = {num * 3.183 / 255:.3f} В")
         print()
 finally:
     GPIO.output(bits, 0)
