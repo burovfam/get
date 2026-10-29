@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mcp3021_driver import MCP3021
 
 
-DYNAMIC_RANGE = 3.183
+DYNAMIC_RANGE = 5.0
 MEASUREMENT_TIME = 10.0
 
 
