@@ -17,8 +17,7 @@ def main():
     durations = []
 
     try:
-        adc = MCP3021(DYNAMIC_RANGE)
-
+        adc = MCP3021(DYNAMIC_RANGE, verbose=False)
         start_time = time.perf_counter()
 
         while time.perf_counter() - start_time < MEASUREMENT_TIME:
@@ -30,6 +29,7 @@ def main():
 
             times.append(measurement_end - start_time)
             voltages.append(voltage)
+
             durations.append(
                 (measurement_end - measurement_start) * 1000
             )
@@ -46,11 +46,10 @@ def main():
         if adc is not None:
             adc.deinit()
 
-    if not durations:
+    if not voltages:
         print("Нет данных для построения графиков.")
         return
 
-    # График напряжения от времени
     plt.figure(figsize=(10, 5))
     plt.plot(times, voltages, "b.-")
     plt.xlabel("Время, с")
@@ -60,7 +59,6 @@ def main():
     plt.tight_layout()
     plt.savefig("10-bit-i2c-adc-plot.png", dpi=150)
 
-    # Гистограмма продолжительности измерений
     plt.figure(figsize=(10, 5))
     plt.hist(durations, bins="auto", edgecolor="black")
     plt.xlabel("Продолжительность измерения, мс")
@@ -70,9 +68,9 @@ def main():
     plt.tight_layout()
     plt.savefig("10-bit-i2c-adc-hist.png", dpi=150)
 
-    print(f"\nВсего измерений: {len(durations)}")
+    print(f"\nВсего измерений: {len(voltages)}")
     print(
-        f"Средняя продолжительность: "
+        f"Средняя продолжительность измерения: "
         f"{sum(durations) / len(durations):.3f} мс"
     )
 
