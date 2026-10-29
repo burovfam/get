@@ -1,4 +1,3 @@
-
 import time
 import matplotlib.pyplot as plt
 
@@ -48,25 +47,31 @@ def main():
         print("Нет данных для построения графиков.")
         return
 
-    plt.figure(figsize=(10, 5))
+    # --- ИЗМЕНЕНИЯ ТОЛЬКО ЗДЕСЬ (ПОСТРОЕНИЕ ГРАФИКОВ) ---
+
+    # Создаем первое окно с графиком
+    fig1 = plt.figure(figsize=(10, 5))
     plt.plot(times, voltages, "b.-")
     plt.xlabel("Время, с")
     plt.ylabel("Напряжение, В")
     plt.title("Напряжение на входе MCP3021")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig("10-bit-i2c-adc-plot.png", dpi=150)
+    fig1.savefig("10-bit-i2c-adc-plot.png", dpi=150) # сохраняем в файл
 
-    plt.figure(figsize=(10, 5))
+    # Создаем второе окно с гистограммой
+    fig2 = plt.figure(figsize=(10, 5))
     plt.hist(durations, bins="auto", edgecolor="black")
     plt.xlabel("Продолжительность измерения, мс")
     plt.ylabel("Количество измерений")
     plt.title("Распределение продолжительности измерений")
     plt.grid(axis="y", alpha=0.3)
     plt.tight_layout()
-    plt.savefig("10-bit-i2c-adc-hist.png", dpi=150)
+    fig2.savefig("10-bit-i2c-adc-hist.png", dpi=150) # сохраняем в файл
 
     print(f"Количество измерений: {len(voltages)}")
+    
+    # Показываем оба окна
     plt.show()
 
 
