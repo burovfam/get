@@ -11,13 +11,12 @@ MEASUREMENT_TIME = 10.0
 
 def main():
     adc = None
-
     times = []
     voltages = []
     durations = []
 
     try:
-        adc = MCP3021(DYNAMIC_RANGE, verbose=False)
+        adc = MCP3021(DYNAMIC_RANGE)
         start_time = time.perf_counter()
 
         while time.perf_counter() - start_time < MEASUREMENT_TIME:
@@ -29,7 +28,6 @@ def main():
 
             times.append(measurement_end - start_time)
             voltages.append(voltage)
-
             durations.append(
                 (measurement_end - measurement_start) * 1000
             )
@@ -68,12 +66,7 @@ def main():
     plt.tight_layout()
     plt.savefig("10-bit-i2c-adc-hist.png", dpi=150)
 
-    print(f"\nВсего измерений: {len(voltages)}")
-    print(
-        f"Средняя продолжительность измерения: "
-        f"{sum(durations) / len(durations):.3f} мс"
-    )
-
+    print(f"Количество измерений: {len(voltages)}")
     plt.show()
 
 
