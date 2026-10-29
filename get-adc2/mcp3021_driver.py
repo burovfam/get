@@ -1,5 +1,5 @@
+
 import smbus
-import time
 
 
 class MCP3021:
@@ -14,33 +14,43 @@ class MCP3021:
 
     def get_number(self):
         data = self.bus.read_word_data(self.address, 0)
+
         lower_data_byte = data >> 8
         upper_data_byte = data & 0xFF
+
         number = (upper_data_byte << 6) | (lower_data_byte >> 2)
-        
+
         if self.verbose:
-            print(f"Принятые данные: {data}, "
-                  f"Старший байт: {upper_data_byte:x}, "
-                  f"Младший байт: {lower_data_byte:x}, "
-                  f"Число: {number}")
+            print(
+                f"Принятые данные: {data}, "
+                f"Старший байт: {upper_data_byte:x}, "
+                f"Младший байт: {lower_data_byte:x}, "
+                f"Число: {number}"
+            )
+
         return number
 
     def get_voltage(self):
         number = self.get_number()
-        # 10 бит -> максимальное число 1023
-        return number * self.dynamic_range / 1023
+        return number * self.dynamic_range / 1024
 
 
 if __name__ == "__main__":
+    import time
+
     adc = None
+
     try:
-        # Подставьте свой измеренный dynamic_range (например, 5.0 или 3.3)
-        adc = MCP3021(5.0, True) 
-        
+        # Укажи измеренный мультиметром динамический диапазон.
+        adc = MCP3021(5.0, verbose=False)
+
         while True:
             voltage = adc.get_voltage()
             print(f"Напряжение: {voltage:.3f} В")
             time.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\nИзмерения остановлены.")
 
     finally:
         if adc is not None:
