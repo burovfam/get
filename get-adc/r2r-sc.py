@@ -23,3 +23,4 @@ try:
 
 finally:
     adc.deinit()
+

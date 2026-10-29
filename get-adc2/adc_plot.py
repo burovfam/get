@@ -1,22 +1,13 @@
 import matplotlib.pyplot as plt
-
-
 def plot_voltage_vs_time(time, voltage, max_voltage):
-    plt.figure(figsize=(10, 6))
-    
-    # Рисуем график
-    plt.plot(time, voltage, color='blue', linewidth=1)
-    
-    # Названия осей
+    plt.figure(figsize=(10,6))
+    plt.plot(time, voltage)
     plt.title("Зависимость напряжения от времени")
     plt.xlabel("Время, с")
     plt.ylabel("Напряжение, В")
-    
-    # Границы осей
     if time:
-        plt.xlim(0, max(time))
-    plt.ylim(0, max_voltage)
+        plt.xlim(0, max(0, max(time)))
     
-    # Сетка и отображение
+    plt.ylim(0, max_voltage)
     plt.grid(True)
     plt.show()
