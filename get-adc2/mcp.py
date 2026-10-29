@@ -5,7 +5,7 @@ from mcp3021_driver import MCP3021
 
 
 DYNAMIC_RANGE = 5.0
-MEASUREMENT_TIME = 10.0
+MEASUREMENT_TIME = 3.0
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
         print("Нет данных для построения графиков.")
         return
 
-    # --- ГРАФИК НАПРЯЖЕНИЯ (остается как был) ---
+  
     fig1 = plt.figure(figsize=(10, 5))
     plt.plot(times, voltages, "b.-")
     plt.xlabel("Время, с")
@@ -49,7 +49,7 @@ def main():
     plt.tight_layout()
     fig1.savefig("10-bit-i2c-adc-plot.png", dpi=150)
 
-    # --- ГИСТОГРАММА (как в примере через разницу соседних измерений) ---
+    
     sampling_periods = []
     for i in range(1, len(times)):
         diff = times[i] - times[i - 1]
