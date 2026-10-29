@@ -12,24 +12,16 @@ def main():
     adc = None
     times = []
     voltages = []
-    durations = []
 
     try:
         adc = MCP3021(DYNAMIC_RANGE)
         start_time = time.perf_counter()
 
         while time.perf_counter() - start_time < MEASUREMENT_TIME:
-            measurement_start = time.perf_counter()
-
             voltage = adc.get_voltage()
 
-            measurement_end = time.perf_counter()
-
-            times.append(measurement_end - start_time)
+            times.append(time.perf_counter() - start_time)
             voltages.append(voltage)
-            durations.append(
-                (measurement_end - measurement_start) * 1000
-            )
 
             print(f"Напряжение: {voltage:.3f} В")
 
@@ -47,9 +39,7 @@ def main():
         print("Нет данных для построения графиков.")
         return
 
-    # --- ИЗМЕНЕНИЯ ТОЛЬКО ЗДЕСЬ (ПОСТРОЕНИЕ ГРАФИКОВ) ---
-
-    # Создаем первое окно с графиком
+    # --- ГРАФИК НАПРЯЖЕНИЯ (остается как был) ---
     fig1 = plt.figure(figsize=(10, 5))
     plt.plot(times, voltages, "b.-")
     plt.xlabel("Время, с")
@@ -57,21 +47,25 @@ def main():
     plt.title("Напряжение на входе MCP3021")
     plt.grid(True)
     plt.tight_layout()
-    fig1.savefig("10-bit-i2c-adc-plot.png", dpi=150) # сохраняем в файл
+    fig1.savefig("10-bit-i2c-adc-plot.png", dpi=150)
 
-    # Создаем второе окно с гистограммой
-    fig2 = plt.figure(figsize=(10, 5))
-    plt.hist(durations, bins="auto", edgecolor="black")
-    plt.xlabel("Продолжительность измерения, мс")
+    # --- ГИСТОГРАММА (как в примере через разницу соседних измерений) ---
+    sampling_periods = []
+    for i in range(1, len(times)):
+        diff = times[i] - times[i - 1]
+        sampling_periods.append(diff)
+
+    fig2 = plt.figure(figsize=(10, 6))
+    plt.hist(sampling_periods)
+    plt.title("Распределение периодов дискретизации")
+    plt.xlabel("Период, с")
     plt.ylabel("Количество измерений")
-    plt.title("Распределение продолжительности измерений")
-    plt.grid(axis="y", alpha=0.3)
+    plt.xlim(0, 0.06)  # Как в твоем примере
+    plt.grid(True)
     plt.tight_layout()
-    fig2.savefig("10-bit-i2c-adc-hist.png", dpi=150) # сохраняем в файл
+    fig2.savefig("10-bit-i2c-adc-hist.png", dpi=150)
 
     print(f"Количество измерений: {len(voltages)}")
-    
-    # Показываем оба окна
     plt.show()
 
 
