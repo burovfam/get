@@ -3,29 +3,43 @@ import adc_plot
 import mcp3021_driver as mcp
 import time
 
+CHARGE_PIN = 17
+CHARGED_V = 4.7     # считаем конденсатор заряженным
+DISCHARGED_V = 0.1  # считаем конденсатор разряженным
+TIMEOUT = 60        # защита от бесконечного цикла, с
+
 if __name__ == "__main__":
-    adc = mcp.MCP3021(5.19)
+    adc = None
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(14, GPIO.OUT)
+    GPIO.setup(CHARGE_PIN, GPIO.OUT, initial=0)
+
     voltage_values = []
     time_values = []
-    flag = True
-    GPIO.output(14, 1)
+    charging = True
+
     try:
-        
+        adc = mcp.MCP3021(5.19)
+
+        GPIO.output(CHARGE_PIN, 1)
         start_time = time.time()
-        while True:
-            otn_time = time.time() - start_time
-            voltage_values.append(adc.get_voltage())
-            time_values.append(otn_time)
-            print(voltage_values[-1])
-            if (voltage_values[-1] > 4.78 and flag):
-                flag = False
-                GPIO.output(14, 0)
-            elif (voltage_values[-1] == 0.0 and not flag):
+
+        while time.time() - start_time < TIMEOUT:
+            t = time.time() - start_time
+            v = adc.get_voltage()
+            time_values.append(t)
+            voltage_values.append(v)
+            print(v)
+
+            if charging and v > CHARGED_V:
+                charging = False
+                GPIO.output(CHARGE_PIN, 0)
+            elif not charging and v < DISCHARGED_V:
                 break
+
         adc_plot.plot_voltage_vs_time(time_values, voltage_values, adc.dynamic_range)
 
     finally:
-        adc.deinit()
+        GPIO.output(CHARGE_PIN, 0)
+        if adc is not None:
+            adc.deinit()
         GPIO.cleanup()
