@@ -2,6 +2,7 @@ import time
 import csv
 import RPi.GPIO as GPIO
 import mcp3021_driver as mcp
+# тест
 
 DYNAMIC_RANGE = 5.0
 CHARGE_PIN = 17
